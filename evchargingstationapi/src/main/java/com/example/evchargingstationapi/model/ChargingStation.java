@@ -3,11 +3,14 @@ package com.example.evchargingstationapi.model;
 
 import com.example.evchargingstationapi.enums.ChargerType;
 import com.example.evchargingstationapi.enums.StationStatus;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "charging_station")
+
+@Table
 public class ChargingStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +24,7 @@ public class ChargingStation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ChargerType chargerType;
+    protected ChargerType chargerType;
 
     @Column(nullable = false)
     private int numberOfChargingPoints;
