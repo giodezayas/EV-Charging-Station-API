@@ -4,6 +4,8 @@ import com.example.evchargingstationapi.enums.StationStatus;
 import com.example.evchargingstationapi.model.ChargingStation;
 import com.example.evchargingstationapi.repository.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,7 +37,13 @@ public class ChargingStationService {
     public void deleteChargingStation(Long id) {
         chargingStationRepository.deleteById(id);
     }
+    @Cacheable(value = "availabilityStatusCache")
+    public StationStatus getAvailabilityStatus(Long id) {
+        ChargingStation chargingStation = chargingStationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Estación de carga no encontrada con ID: " + id));
 
+        return chargingStation.getStatus();
+    }
     public ChargingStation updateChargingStationStatus(Long id, StationStatus status) {
         Optional<ChargingStation> optionalChargingStation = chargingStationRepository.findById(id);
         if (optionalChargingStation.isPresent()) {
@@ -45,6 +53,11 @@ public class ChargingStationService {
         } else {
             throw new EntityNotFoundException("Charging Station not found with id: " + id);
         }
+    }
+
+    @CacheEvict(value = "availabilityStatusCache", allEntries = true)
+    public void evictAllAvailabilityStatusCache() {
+        // Este método eliminará todas las entradas de la caché
     }
 }
 

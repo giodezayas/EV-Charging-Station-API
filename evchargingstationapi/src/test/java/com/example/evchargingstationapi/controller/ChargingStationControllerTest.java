@@ -5,13 +5,20 @@ package com.example.evchargingstationapi.controller;
 import com.example.evchargingstationapi.enums.StationStatus;
 import com.example.evchargingstationapi.model.ChargingStation;
 import com.example.evchargingstationapi.service.ChargingStationService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +26,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
 public class ChargingStationControllerTest {
-
+    @Autowired
+    private MockMvc mockMvc;
     @Mock
     private ChargingStationService chargingStationService;
 
@@ -103,6 +113,17 @@ public class ChargingStationControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(chargingStationToUpdate, response.getBody());
+    }
+    @Test
+    public void testGetAvailabilityStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/charging-stations/1/availability"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testEvictAllAvailabilityStatusCache() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/charging-stations/clear-cache"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
 

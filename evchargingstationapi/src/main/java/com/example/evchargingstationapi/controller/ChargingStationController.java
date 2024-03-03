@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/charging-stations")
+@RequestMapping("/api/charging-stations")
 public class ChargingStationController {
 
     private final ChargingStationService chargingStationService;
@@ -50,6 +50,17 @@ public class ChargingStationController {
     public ResponseEntity<ChargingStation> updateChargingStationStatus(@PathVariable Long id, @RequestParam StationStatus status) {
         ChargingStation updatedChargingStation = chargingStationService.updateChargingStationStatus(id, status);
         return new ResponseEntity<>(updatedChargingStation, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/availability")
+    public StationStatus getAvailabilityStatus(@PathVariable Long id) {
+        return chargingStationService.getAvailabilityStatus(id);
+    }
+
+    @PostMapping("/clear-cache")
+    public ResponseEntity<String> evictAllAvailabilityStatusCache() {
+        chargingStationService.evictAllAvailabilityStatusCache();
+        return ResponseEntity.ok("Cache cleared successfully");
     }
 }
 
