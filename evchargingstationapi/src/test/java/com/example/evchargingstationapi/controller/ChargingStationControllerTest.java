@@ -5,7 +5,7 @@ package com.example.evchargingstationapi.controller;
 import com.example.evchargingstationapi.enums.StationStatus;
 import com.example.evchargingstationapi.model.ChargingStation;
 import com.example.evchargingstationapi.service.ChargingStationService;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
