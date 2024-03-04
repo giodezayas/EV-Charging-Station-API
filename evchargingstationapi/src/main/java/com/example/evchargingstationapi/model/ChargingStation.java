@@ -3,10 +3,9 @@ package com.example.evchargingstationapi.model;
 
 import com.example.evchargingstationapi.enums.ChargerType;
 import com.example.evchargingstationapi.enums.StationStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
 
