@@ -6,6 +6,8 @@ import com.example.evchargingstationapi.enums.StationStatus;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 
@@ -19,14 +21,15 @@ public class ChargingStation {
     private String stationId;
 
     @Column(nullable = false)
-    private String location;
+    @Embedded
+    private Location location;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     protected ChargerType chargerType;
 
-    @Column(nullable = false)
-    private int numberOfChargingPoints;
+    @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL)
+    private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -53,11 +56,11 @@ public class ChargingStation {
         this.stationId = stationId;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -69,12 +72,12 @@ public class ChargingStation {
         this.chargerType = chargerType;
     }
 
-    public int getNumberOfChargingPoints() {
-        return numberOfChargingPoints;
+    public List<ChargingPoint> getChargingPoints() {
+        return chargingPoints;
     }
 
-    public void setNumberOfChargingPoints(int numberOfChargingPoints) {
-        this.numberOfChargingPoints = numberOfChargingPoints;
+    public void setChargingPoints(List<ChargingPoint> chargingPoints) {
+        this.chargingPoints = chargingPoints;
     }
 
     public StationStatus getStatus() {
@@ -83,6 +86,11 @@ public class ChargingStation {
 
     public void setStatus(StationStatus status) {
         this.status = status;
+    }
+
+    public void addChargingPoint(ChargingPoint chargingPoint) {
+        chargingPoints.add(chargingPoint);
+        chargingPoint.setChargingStation(this);
     }
 }
 
