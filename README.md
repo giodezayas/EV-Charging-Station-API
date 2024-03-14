@@ -28,6 +28,9 @@ Antes de ejecutar la API, asegúrate de tener instalado lo siguiente:
 Asegúrate de tener un servidor Redis en ejecución.
 Configura la conexión al puerto Redis en el archivo application.properties.
 
+### Docker Image Tag :
+
+evcharginstationapiv1.1
 
 ### Clonar el repositorio:
 
