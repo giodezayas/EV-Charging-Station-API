@@ -1,5 +1,8 @@
 package com.example.evchargingstationapi.model;
 
+import com.example.evchargingstationapi.enums.PowerLevel;
+import com.example.evchargingstationapi.enums.StationStatus;
+
 import javax.persistence.*;
 
 @Entity
@@ -22,14 +25,14 @@ public class ChargingPoint {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ChargingStatus status;
+    private StationStatus status;
 
     // Constructor vacío
     public ChargingPoint() {
     }
 
     // Constructor con todos los atributos
-    public ChargingPoint(String identifier, PowerLevel powerLevel, ChargingStatus status) {
+    public ChargingPoint(String identifier, PowerLevel powerLevel, StationStatus status) {
         this.identifier = identifier;
         this.powerLevel = powerLevel;
         this.status = status;
@@ -68,11 +71,11 @@ public class ChargingPoint {
         this.powerLevel = powerLevel;
     }
 
-    public ChargingStatus getStatus() {
+    public StationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ChargingStatus status) {
+    public void setStatus(StationStatus status) {
         this.status = status;
     }
 }
