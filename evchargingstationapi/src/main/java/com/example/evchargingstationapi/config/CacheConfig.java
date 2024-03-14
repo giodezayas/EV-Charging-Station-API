@@ -23,7 +23,7 @@ public class CacheConfig {
                         RedisCacheConfiguration.defaultCacheConfig()
                                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                                .entryTtl(Duration.ofSeconds(300)) // Duración de la caché en segundos
+                                .entryTtl(Duration.ofSeconds(300))
                                 .disableCachingNullValues()
                 )
                 .transactionAware()

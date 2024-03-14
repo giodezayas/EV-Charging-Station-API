@@ -20,6 +20,9 @@ public class Location {
         this.longitude = longitude;
     }
 
+    public Location() {
+    }
+
     public String getAddress() {
         return address;
     }

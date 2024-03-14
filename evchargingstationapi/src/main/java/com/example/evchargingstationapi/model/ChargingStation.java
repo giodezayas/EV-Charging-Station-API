@@ -3,6 +3,7 @@ package com.example.evchargingstationapi.model;
 
 import com.example.evchargingstationapi.enums.ChargerType;
 import com.example.evchargingstationapi.enums.StationStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class ChargingStation {
     @Column(nullable = false)
     protected ChargerType chargerType;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL)
     private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
@@ -35,11 +37,11 @@ public class ChargingStation {
     @Column(nullable = false)
     private StationStatus status;
 
-    // Constructor
+
     public ChargingStation() {
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }

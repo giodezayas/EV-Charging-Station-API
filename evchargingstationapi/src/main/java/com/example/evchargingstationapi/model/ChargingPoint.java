@@ -6,7 +6,7 @@ import com.example.evchargingstationapi.enums.StationStatus;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "charging_points")
+@Table
 public class ChargingPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,18 +27,18 @@ public class ChargingPoint {
     @Column(nullable = false)
     private StationStatus status;
 
-    // Constructor vacío
+
     public ChargingPoint() {
     }
 
-    // Constructor con todos los atributos
+
     public ChargingPoint(String identifier, PowerLevel powerLevel, StationStatus status) {
         this.identifier = identifier;
         this.powerLevel = powerLevel;
         this.status = status;
     }
 
-    // Getters y setters
+
     public Long getId() {
         return id;
     }
