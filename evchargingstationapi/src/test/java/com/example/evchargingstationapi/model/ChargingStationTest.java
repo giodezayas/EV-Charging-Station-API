@@ -5,49 +5,48 @@ package com.example.evchargingstationapi.model;
 import com.example.evchargingstationapi.enums.ChargerType;
 import com.example.evchargingstationapi.enums.StationStatus;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import com.example.evchargingstationapi.enums.PowerLevel;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ChargingStationTest {
 
     @Test
-    public void testChargingStationInitialization() {
-        ChargingStation station = new ChargingStation();
-        assertNotNull(station);
-    }
-
-    @Test
     public void testChargingStationId() {
-        ChargingStation station = new ChargingStation();
-        station.setStationId("ABC123");
-        assertEquals("ABC123", station.getStationId());
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setStationId("CS001");
+        assertEquals("CS001", chargingStation.getStationId());
     }
 
     @Test
     public void testChargingStationLocation() {
-        ChargingStation station = new ChargingStation();
-        station.setLocation("123 Main St, City, Country");
-        assertEquals("123 Main St, City, Country", station.getLocation());
+        ChargingStation chargingStation = new ChargingStation();
+        Location location = new Location("123 Main St", 40.7128, -74.0060);
+        chargingStation.setLocation(location);
+        assertEquals(location, chargingStation.getLocation());
     }
 
     @Test
     public void testChargingStationChargerType() {
-        ChargingStation station = new ChargingStation();
-        station.setChargerType(ChargerType.AC);
-        assertEquals(ChargerType.AC, station.getChargerType());
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setChargerType(ChargerType.AC);
+        assertEquals(ChargerType.AC, chargingStation.getChargerType());
     }
 
     @Test
-    public void testChargingStationNumberOfChargingPoints() {
-        ChargingStation station = new ChargingStation();
-        station.setNumberOfChargingPoints(2);
-        assertEquals(2, station.getNumberOfChargingPoints());
+    public void testChargingStationChargingPoints() {
+        ChargingStation chargingStation = new ChargingStation();
+        ChargingPoint chargingPoint1 = new ChargingPoint("CP001", PowerLevel.LOW,StationStatus.AVAILABLE);
+        ChargingPoint chargingPoint2 = new ChargingPoint("CP002", PowerLevel.HIGH,StationStatus.IN_USE);
+        chargingStation.addChargingPoint(chargingPoint1);
+        chargingStation.addChargingPoint(chargingPoint2);
+        assertEquals(2, chargingStation.getChargingPoints().size());
     }
 
     @Test
     public void testChargingStationStatus() {
-        ChargingStation station = new ChargingStation();
-        station.setStatus(StationStatus.AVAILABLE);
-        assertEquals(StationStatus.AVAILABLE, station.getStatus());
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setStatus(StationStatus.AVAILABLE);
+        assertEquals(StationStatus.AVAILABLE, chargingStation.getStatus());
     }
 }
 

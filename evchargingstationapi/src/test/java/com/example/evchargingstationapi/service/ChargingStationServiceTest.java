@@ -1,8 +1,11 @@
 package com.example.evchargingstationapi.service;
 
-import com.example.evchargingstationapi.model.ChargingStation;
 import com.example.evchargingstationapi.enums.ChargerType;
+import com.example.evchargingstationapi.enums.PowerLevel;
 import com.example.evchargingstationapi.enums.StationStatus;
+import com.example.evchargingstationapi.model.ChargingPoint;
+import com.example.evchargingstationapi.model.ChargingStation;
+import com.example.evchargingstationapi.model.Location;
 import com.example.evchargingstationapi.repository.ChargingStationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,17 +38,10 @@ public class ChargingStationServiceTest {
         // Arrange
         List<ChargingStation> expectedStations = new ArrayList<>();
         ChargingStation station1 = new ChargingStation();
-        station1.setId(1L);
-        station1.setLocation("Location 1");
-        station1.setChargerType(ChargerType.AC);
-        station1.setNumberOfChargingPoints(2);
+        ChargingPoint chargingPoint1 = new ChargingPoint();
+        chargingPoint1.setId(1L);
+        station1.addChargingPoint(chargingPoint1);
         expectedStations.add(station1);
-        ChargingStation station2 = new ChargingStation();
-        station2.setId(2L);
-        station2.setLocation("Location 2");
-        station2.setChargerType(ChargerType.DC_FAST);
-        station2.setNumberOfChargingPoints(1);
-        expectedStations.add(station2);
         when(chargingStationRepository.findAll()).thenReturn(expectedStations);
 
         // Act
@@ -61,9 +57,6 @@ public class ChargingStationServiceTest {
         // Arrange
         ChargingStation expectedStation = new ChargingStation();
         expectedStation.setId(1L);
-        expectedStation.setLocation("Location 1");
-        expectedStation.setChargerType(ChargerType.AC);
-        expectedStation.setNumberOfChargingPoints(2);
         when(chargingStationRepository.findById(1L)).thenReturn(Optional.of(expectedStation));
 
         // Act
@@ -78,9 +71,6 @@ public class ChargingStationServiceTest {
         // Arrange
         ChargingStation chargingStationToSave = new ChargingStation();
         chargingStationToSave.setId(1L);
-        chargingStationToSave.setLocation("Location 1");
-        chargingStationToSave.setChargerType(ChargerType.AC);
-        chargingStationToSave.setNumberOfChargingPoints(2);
         when(chargingStationRepository.save(chargingStationToSave)).thenReturn(chargingStationToSave);
 
         // Act
@@ -124,4 +114,90 @@ public class ChargingStationServiceTest {
         assertEquals(updatedChargingStation, result);
     }
 
+
+
+
+
+    @Test
+    public void testGetAvailabilityStatus() {
+        // Arrange
+        Long id = 1L;
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setId(id);
+        chargingStation.setStatus(StationStatus.AVAILABLE);
+        when(chargingStationRepository.findById(id)).thenReturn(Optional.of(chargingStation));
+
+        // Act
+        StationStatus result = chargingStationService.getAvailabilityStatus(id);
+
+        // Assert
+        assertEquals(StationStatus.AVAILABLE, result);
+    }
+
+    @Test
+    public void testEvictAllAvailabilityStatusCache() {
+        // Act
+        chargingStationService.evictAllAvailabilityStatusCache();
+
+        // Assert - Verificar que no se lancen excepciones
+    }
+
+    @Test
+    public void testGetChargingStationLocation() {
+        // Arrange
+        Long id = 1L;
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setId(id);
+        chargingStation.setLocation(new Location("Address", 123.456, 789.012));
+        when(chargingStationRepository.findById(id)).thenReturn(Optional.of(chargingStation));
+
+        // Act
+        Location result = chargingStationService.getChargingStationLocation(id);
+
+        // Assert
+        assertEquals(chargingStation.getLocation(), result);
+    }
+
+    @Test
+    public void testGetChargingStationChargingPoints() {
+        // Arrange
+        Long id = 1L;
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setId(id);
+        ChargingPoint chargingPoint1 = new ChargingPoint();
+        chargingPoint1.setId(1L);
+        chargingStation.addChargingPoint(chargingPoint1);
+        ChargingPoint chargingPoint2 = new ChargingPoint();
+        chargingPoint2.setId(2L);
+        chargingStation.addChargingPoint(chargingPoint2);
+        when(chargingStationRepository.findById(id)).thenReturn(Optional.of(chargingStation));
+
+        // Act
+        List<ChargingPoint> result = chargingStationService.getAllChargingPoints(id);
+
+        // Assert
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testGetChargingPointAttributes() {
+        // Arrange
+        Long stationId = 1L;
+        Long chargingPointId = 1L;
+        ChargingStation chargingStation = new ChargingStation();
+        chargingStation.setId(stationId);
+        ChargingPoint chargingPoint = new ChargingPoint();
+        chargingPoint.setId(chargingPointId);
+        chargingPoint.setIdentifier("CP1");
+        chargingPoint.setStatus(StationStatus.AVAILABLE);
+        chargingPoint.setPowerLevel(PowerLevel.LOW);
+        chargingStation.addChargingPoint(chargingPoint);
+        when(chargingStationRepository.findById(stationId)).thenReturn(Optional.of(chargingStation));
+
+        // Act
+        ChargingPoint result = chargingStationService.getChargingPointAttributes(stationId, chargingPointId);
+
+        // Assert
+        assertEquals(chargingPoint, result);
+    }
 }
